@@ -8,5 +8,5 @@ CONCISE jointly models key features of ST data, including spatial autocorrelatio
 
 The `CONCISE` package supports both spatial ligand–receptor interaction (LRI) inference and gene-gene network construction, facilitating the characterization of biologically meaningful CCC and spatially organized gene modules. 
 
-Extensive real-data permutation experiments and biologically motivated negative-control analyses across platforms have demonstrated its reliablility. Applications of CONCISE have uncovered distinct communication patterns between inflammation-associated fibroblasts and normal fibroblasts during intestinal inflammation, and have elucidated complex tumor-immune and tumor-stromal signaling networks within the tumor microenvironment.
+Extensive real-data permutation and biologically motivated negative-control studies have demonstrated its reliablility. Applications of CONCISE have uncovered distinct communication patterns between inflammation-associated fibroblasts and normal fibroblasts during intestinal inflammation, and have elucidated complex tumor-immune and tumor-stromal signaling networks within the tumor microenvironment.
 

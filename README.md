@@ -2,9 +2,9 @@
 
 A statistically principled, robust, and efficient method for spatial gene-gene co-expression and ligand-receptor interaction inference.
 
-![CONCISE\_overview](overview/overview.jpg)
-
 CONCISE is a statistically principled approach for inferring spatially constrained gene co-expression and cell-cell communication (CCC) from spatial transcriptomics (ST) data. It jointly models key features of ST data, including spatial autocorrelation, the count-based nature of the data, heterogeneous total molecular counts and measurement errors, all of which can confound spatial co-expression analyses and generate spurious discoveries if ignored. By explicitly incorporating these sources of confounding within a unified statistical framework, CONCISE enables reliable inference with calibrated false-positive control and high statistical power. By explicitly accounting for these factors within a unified statistical framework, **CONCISE enables reliable inference with well-calibrated false-positive control and high detection power**.
+
+![CONCISE\_overview](overview/overview.jpg)
 
 Built upon a flexible statistical model with efficient moment-based parameter estimation and analytically derived hypothesis testing, CONCISE avoids computationally intensive permutation procedures and restrictive distributional assumptions. As a result, it delivers statistically rigorous inference while maintaining **high robustness and computational efficiency**.
 

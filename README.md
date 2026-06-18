@@ -2,7 +2,7 @@
 
 *Spatial co-expression and cell-cell communication inference from spatially resolved transcriptomics with CONCISE*
 
-A statistically principled, robust, and efficient method for spatial ligand-receptor interaction and gene-gene network inference.
+A statistically principled, robust, and fast method for spatial ligand-receptor interaction inference and gene-gene network construction.
 
 ![CONCISE\_overview](overview/overview.jpg)
 

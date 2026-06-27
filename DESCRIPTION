@@ -1,0 +1,18 @@
+Package: CONCISE
+Type: Package
+Title: Spatial co-expression and ligand-receptor interaction inference
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Jia", "Zhao",
+      email = "jia.zhao@yale.edu",
+      role = c("aut", "cre")
+    )
+  )
+Description: Spatial co-expression and ligand-receptor interaction inference with CONCISE
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Imports:
+    Matrix
+RoxygenNote: 7.3.2

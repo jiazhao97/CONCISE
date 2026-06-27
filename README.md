@@ -10,3 +10,11 @@ CONCISE jointly models intrinsic features of ST count data, including spatial au
 
 Extensive real-data permutation and biologically motivated negative-control studies have demonstrated its reliablility. Applications of CONCISE have uncovered distinct communication patterns between inflammation-associated fibroblasts and normal fibroblasts during intestinal inflammation, and elucidated complex tumor-immune and tumor-stromal signaling networks within the tumor microenvironment.
 
+Installation
+------------
+* CONCISE can be installed from GitHub:
+```
+# install.packages("devtools")
+library(devtools)
+install_github("jiazhao97/CONCISE")
+```

@@ -15,7 +15,7 @@ CONCISE_joint_sparse <- function(
     lib_size = NULL) {
 
   ### load and summarize marginal fitting results
-  message("Loading and summarizing marginal fitting results for ligands and receptors...")
+  cat("Loading and summarizing marginal fitting results for ligands and receptors...\n")
   ## load ligand results
   ligand_res <- read.csv(paste0(result_path, "/MoM_marginal_fit_ligand_res_Kchoice_1.csv"), row.names = 1)
   colnames(ligand_res)[2:length(colnames(ligand_res))] <- paste(colnames(ligand_res)[2:length(colnames(ligand_res))], "1", sep = ".")
@@ -94,7 +94,7 @@ CONCISE_joint_sparse <- function(
   pairdb$select_kernel2 <- receptor_res_tmp$select.kernel
 
   pairdb$kernel_type <- paste(pairdb$select_kernel1, pairdb$select_kernel2, sep = "-")
-  message("Done!")
+  cat("Done!\n")
 
 
 
@@ -105,7 +105,7 @@ CONCISE_joint_sparse <- function(
   index_cell <- which(celltype_anno %in% c(L_celltype, R_celltype))
 
   ### pre-screening expression level
-  message("Pre-screening expression level")
+  cat("Pre-screening expression level\n")
   if (is.null(lib_size)) {
     lib_size <- as.vector(apply(rawcount, 2, sum))
   }
@@ -113,7 +113,7 @@ CONCISE_joint_sparse <- function(
   gt_s <- lib_size * aver_sd
 
   #Lgene
-  message("\tLigands")
+  cat("\tLigands\n")
   pairdb$exp_val_Lgene_L <- 0.
   pairdb$exp_val_Lgene_R <- 0.
   for (i in 1:dim(pairdb)[1]) {
@@ -131,7 +131,7 @@ CONCISE_joint_sparse <- function(
   }
 
   #Rgene
-  message("\tReceptors")
+  cat("\tReceptors\n")
   pairdb$exp_val_Rgene_L <- 0.
   pairdb$exp_val_Rgene_R <- 0.
   for (i in 1:dim(pairdb)[1]) {
@@ -159,10 +159,10 @@ CONCISE_joint_sparse <- function(
   gt_s <- gt_s[index_cell]
   celltype_anno <- as.vector(celltype_anno)[index_cell]
   stopifnot(length(unique(celltype_anno)) == 2)
-  message("Done!")
+  cat("Done!\n")
 
   ## calculate interaction kernel
-  message("Creating interaction kernel...")
+  cat("Creating interaction kernel...\n")
   lvalx <- Wx_distance_threshold
   D <- dist(loc, method = "euclidean")
   D <- as.matrix(D)
@@ -172,11 +172,11 @@ CONCISE_joint_sparse <- function(
   diag(Wx) <- 0.
   Wx[as.vector(celltype_anno) != L_celltype, ] <- 0
   Wx[, as.vector(celltype_anno) != R_celltype] <- 0
-  message("Done!")
+  cat("Done!\n")
 
   ## pre-calculation for parameter estimation
-  message("Parameter estimation...")
-  message("\tPre-calculation for parameter estimation")
+  cat("Parameter estimation...\n")
+  cat("\tPre-calculation for parameter estimation\n")
   n <- length(index_cell)
   stopifnot(length(gt_s) == n)
   stopifnot(dim(rawcount)[2] == n)
@@ -192,7 +192,7 @@ CONCISE_joint_sparse <- function(
   rm(Wx)
 
   ## scan each ligand-receptor pair
-  message("\tScanning each ligand-receptor pair...")
+  cat("\tScanning each ligand-receptor pair...\n")
   ligand_list_qc <- pairdb$ligand_organized_qc
   gen_y_L <- matrix(0, nrow = n, ncol = length(ligand_list_qc))
   for (r in 1:length(ligand_list_qc)) {
@@ -217,26 +217,26 @@ CONCISE_joint_sparse <- function(
   y_v_R <- gen_y_R - gt_s %*% t(pairdb$a2_hat) # cell by gene
   delta_hat_mat <- crossprod(y_v_L, Kx_s %*% y_v_R) / sl / trcrKx_s
   pairdb$delta_hat <- diag(delta_hat_mat)
-  message("Done!")
+  cat("Done!\n")
 
 
 
   ### conduct statistical inference for delta
   ## construct kernel list
-  message("Creating spatial kernels...")
+  cat("Creating spatial kernels...\n")
   lval.list <- c(ligand_res$lval.1[1], ligand_res$lval.2[1], ligand_res$lval.3[1])
   n_K <- length(lval.list)
   K_s_list <- list()
   for (i_k in 1:n_K) {
-    message(paste0("\tSpatial kernel ", i_k))
+    cat(paste0("\tSpatial kernel ", i_k, "\n"))
     lval <- lval.list[i_k]
     K_s_list[[i_k]] <- exp(-D^2/(2*(lval^2))) / sl * tcrgt_s ##lval has to be matched
   }
   rm(D)
 
   ## pre-calculation for statistical inference
-  message("Statistical inference...")
-  message("\tPre-calculation for statistical inference")
+  cat("Statistical inference...\n")
+  cat("\tPre-calculation for statistical inference\n")
   term_se_names <- c("term_se_1_1", "term_se_1_2",
                      "term_se_2_1", "term_se_2_2", "term_se_2_3", "term_se_2_4", "term_se_2_5",
                      "term_se_3_1", "term_se_3_2", "term_se_3_3", "term_se_3_4")
@@ -247,7 +247,7 @@ CONCISE_joint_sparse <- function(
   rownames(term_se_precalculate) <- kernel_type_names
 
   ## terms not related to marginal kernels
-  message("\t\tTerms not related to marginal kernels")
+  cat("\t\tTerms not related to marginal kernels\n")
   Kx_s_dot_Kx_s <- Kx_s^2
   term_se_1_1 <- sum(as.matrix(Kx_s_dot_Kx_s) * tcrgt_s)
   term_se_1_2 <- sum(Kx_s_dot_Kx_s * Kx_s)
@@ -273,7 +273,7 @@ CONCISE_joint_sparse <- function(
   rm(Kx_sT)
 
   ## terms related to only one marginal kernel
-  message("\t\tTerms related to only one marginal kernel")
+  cat("\t\tTerms related to only one marginal kernel\n")
   Kx_sTK_s_list <- list()
   Kx_sK_s_list <- list()
   for (i_k in 1:n_K) {
@@ -309,7 +309,7 @@ CONCISE_joint_sparse <- function(
   rm(s_Kx_sT_Kx_sT_outer)
 
   ## terms related to both two marginal kernels
-  message("\t\tTerms related to both two marginal kernels")
+  cat("\t\tTerms related to both two marginal kernels\n")
   for (i_k1 in 1:n_K) {
     # kernel 1
     Kx_sTK_s <- Kx_sTK_s_list[[i_k1]]
@@ -333,7 +333,7 @@ CONCISE_joint_sparse <- function(
   term_se_precalculate[, "term_se_3_4"] <- term_se_precalculate[, "term_se_3_4"] / sl
 
   ## scan each ligand-receptor pair in pairdb
-  message("\tScanning each ligand-receptor pair in pairdb")
+  cat("\tScanning each ligand-receptor pair in pairdb\n")
   n_pair <- dim(pairdb)[1]
 
   pairdb$se_delta_hat <- 0
@@ -378,7 +378,7 @@ CONCISE_joint_sparse <- function(
     P_value <- pchisq(W, 1, lower.tail=F)
     pairdb$p_value <- P_value
   }
-  message("Done!")
+  cat("Done!\n")
 
   ### save results
   write.csv(pairdb, paste0(result_path, "/MoM_joint_fit_LRI_res_", L_celltype, "_to_", R_celltype, ".csv", sep = ""))

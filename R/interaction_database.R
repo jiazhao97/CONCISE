@@ -14,7 +14,7 @@ InteractionDB <- function(
   gene_names <- names(gene_prop)[gene_prop > 0.01] # genes that at least have a very small proportion of expressing cells or spots
 
   target_list <- unique(pairdb$ligand_organized)
-  message(paste0("Total number of ligands = ", length(target_list)))
+  cat(paste0("Total number of ligands = ", length(target_list), "\n"))
   ligand_qc_original <- c() # record the original combination
   ligand_qc <- c() # some of the genes may not be included in the analyzed data, so the ligand combination names could be changed
   for (i in 1:length(target_list)) {
@@ -46,10 +46,10 @@ InteractionDB <- function(
       }
     }
   }
-  message(paste0("Total number of ligands after sparsity QC = ", length(ligand_qc)))
+  cat(paste0("Total number of ligands after sparsity QC = ", length(ligand_qc), "\n"))
 
   target_list <- unique(pairdb$receptor_organized)
-  message(paste0("Total number of receptors = ", length(target_list)))
+  cat(paste0("Total number of receptors = ", length(target_list), "\n"))
   receptor_qc_original <- c() # record the original combination
   receptor_qc <- c() # some of the genes may not be included in the analyzed data, so the receptor combination names could be changed
   for (i in 1:length(target_list)) {
@@ -81,7 +81,7 @@ InteractionDB <- function(
       }
     }
   }
-  message(paste0("Total number of receptors after sparsity QC = ", length(receptor_qc)))
+  cat(paste0("Total number of receptors after sparsity QC = ", length(receptor_qc), "\n"))
 
   pairdb <- pairdb[(pairdb$ligand_organized %in% ligand_qc_original) & (pairdb$receptor_organized %in% receptor_qc_original), ]
   names(ligand_qc) <- ligand_qc_original

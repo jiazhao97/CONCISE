@@ -18,8 +18,8 @@ CONCISE_marginal_sparse <- function(
   n <- length(lib_size)
 
   ## spatial kernels
-  message("Creating spatial kernels...")
-  message(paste0("\tmarginal kernel ", K_choice))
+  cat("Creating spatial kernels...\n")
+  cat(paste0("\tmarginal kernel ", K_choice, "\n"))
   D <- dist(loc, method = "euclidean")
   D <- as.matrix(D)
   lmin <- min(D[D > 0])
@@ -28,7 +28,7 @@ CONCISE_marginal_sparse <- function(
   lval <- lval.list[K_choice]
   W <- exp(-D^2/(2*(lval^2)))
   rm(D)
-  message("Done!")
+  cat("Done!\n")
 
   ## get ground truth library size to make the scale of normalized gene expressions roughly having sd = 1
   ligand_list <- unique(pairdb$ligand_organized_qc)
@@ -44,7 +44,7 @@ CONCISE_marginal_sparse <- function(
 
 
   ### pre-calculation for parameter estimation
-  message("Pre-calculation for parameter estimation...")
+  cat("Pre-calculation for parameter estimation...\n")
   stopifnot(dim(W)[1] == n)
   sl <- sqrt(n)
   I_s_dense <- diag((gt_s^2) / sl)
@@ -57,11 +57,11 @@ CONCISE_marginal_sparse <- function(
   trK_sI_s <- sum(K_s * I_s_dense)
 
   S <- matrix(c(trsqK_s, trK_sI_s, trK_sI_s, trsqI_s), nrow = 2, ncol = 2)
-  message("Done!")
+  cat("Done!\n")
 
 
   ### parameter estimation for ligands
-  message("Parameter estimation for ligands...")
+  cat("Parameter estimation for ligands...\n")
   ligand_list <- unique(pairdb$ligand_organized_qc)
   ligand_res <- data.frame(ligand_organized_qc = ligand_list)
   ligand_res$lval <- lval
@@ -113,11 +113,11 @@ CONCISE_marginal_sparse <- function(
   sqsigma_e_hat <- ligand_res$sqsigma_e_hat
   F_score <- (sqsigma_hat^2)*trsqK_s + (sqsigma_e_hat^2)*trsqI_s + 2*sqsigma_hat*sqsigma_e_hat*trK_sI_s - 2*sqsigma_hat*q[1, ] - 2*sqsigma_e_hat*q[2, ]
   ligand_res$F_score <- F_score
-  message("Done!")
+  cat("Done!\n")
 
 
   ### parameter estimation for receptors
-  message("Parameter estimation for receptors...")
+  cat("Parameter estimation for receptors...\n")
   receptor_list <- unique(pairdb$receptor_organized_qc)
   receptor_res <- data.frame(receptor_organized_qc = receptor_list)
   receptor_res$lval <- lval
@@ -169,7 +169,7 @@ CONCISE_marginal_sparse <- function(
   sqsigma_e_hat <- receptor_res$sqsigma_e_hat
   F_score <- (sqsigma_hat^2)*trsqK_s + (sqsigma_e_hat^2)*trsqI_s + 2*sqsigma_hat*sqsigma_e_hat*trK_sI_s - 2*sqsigma_hat*q[1, ] - 2*sqsigma_e_hat*q[2, ]
   receptor_res$F_score <- F_score
-  message("Done!")
+  cat("Done!\n")
 
 
   ### save results

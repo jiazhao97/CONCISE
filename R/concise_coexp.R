@@ -9,7 +9,7 @@ CONCISE_coexp <- function(
     lib_size = NULL) {
 
   ## spatial kernels
-  message("Creating spatial kernels...")
+  cat("Creating spatial kernels...\n")
   D <- pdist(loc, metric = "euclidean", p = 2)
   # create K_p1, K_p2 kernel lists
   lmin <- min(D[D > 0])
@@ -18,12 +18,12 @@ CONCISE_coexp <- function(
   n_K <- length(lval.list)
   W_list <- list()
   for (i_k in 1:n_K) {
-    message(paste0("\tmarginal kernel ", i_k))
+    cat(paste0("\tmarginal kernel ", i_k, "\n"))
     lval <- lval.list[i_k]
     W_list[[i_k]] <- exp(-D^2/(2*(lval^2)))
     W_list[[i_k]] <- 0.5 * (W_list[[i_k]] + t(W_list[[i_k]]))
   }
-  message("Done!")
+  cat("Done!\n")
 
   ## calculate libarary size
   if (is.null(lib_size)) {
@@ -40,7 +40,7 @@ CONCISE_coexp <- function(
 
 
   ### iterate over choices of kernels and finish all the estimate based on the current kernel
-  message("Iterating over choices of kernels and estimating parameters of marginal distributions...")
+  cat("Iterating over choices of kernels and estimating parameters of marginal distributions...\n")
   stopifnot(length(W_list) == n_K)
   stopifnot(dim(W_list[[1]])[1] == n)
   sl <- sqrt(n)
@@ -70,7 +70,7 @@ CONCISE_coexp <- function(
 
   for (i_k in 1:n_K) {
 
-    message(paste0("\tmarginal kernel ", i_k))
+    cat(paste0("\tmarginal kernel ", i_k, "\n"))
 
     ## pre-calculation for parameter estimation
     K_s <- K_s_list[[i_k]]
@@ -126,7 +126,7 @@ CONCISE_coexp <- function(
     F_score <- (sqsigma_hat^2)*trsqK_s + (sqsigma_e_hat^2)*trsqI_s + 2*sqsigma_hat*sqsigma_e_hat*trK_sI_s - 2*sqsigma_hat*q[1, ] - 2*sqsigma_e_hat*q[2, ]
     hvg_res[paste0("F_score.", i_k)] <- F_score
   }
-  message("Done!")
+  cat("Done!\n")
 
   ## summarize the single variant MoM result and organize the corrdb accordingly
   # select kernels
@@ -168,7 +168,7 @@ CONCISE_coexp <- function(
 
 
   ### MoM parameter estimation for delta
-  message("Estimating parameters of the joint spatial process and performing statistical inference...")
+  cat("Estimating parameters of the joint spatial process and performing statistical inference...\n")
   ## pre-calculation for parameter estimation
   stopifnot(dim(K_s_list[[1]])[1] == n)
   Kx <- diag(n) / sl
@@ -178,7 +178,7 @@ CONCISE_coexp <- function(
   trcrKx_s <- sum(diag(crKx_s))
 
   ## scan each ligand-receptor pair in pairdb
-  message("\tparameter estimation for each pair in pairdb")
+  cat("\tparameter estimation for each pair in pairdb\n")
   gen_y <- t(rawcount[hvg_list, ]) # cell by gene
   stopifnot(sum(corrdb$gene2[1:length(hvg_list)] != hvg_list) == 0)
   base_y <- gt_s %*% t(hvg_res$a_hat) # cell by gene
@@ -192,7 +192,7 @@ CONCISE_coexp <- function(
 
   ### MoM statistical inference for delta
   ## pre-calculation for statistical inference
-  message("\tpre-calculation for statistical inference")
+  cat("\tpre-calculation for statistical inference\n")
   term_se_names <- c("term_se_1_1", "term_se_1_2",
                      "term_se_2_1", "term_se_2_2", "term_se_2_3", "term_se_2_4", "term_se_2_5",
                      "term_se_3_1", "term_se_3_2", "term_se_3_3", "term_se_3_4")
@@ -203,7 +203,7 @@ CONCISE_coexp <- function(
   rownames(term_se_precalculate) <- kernel_type_names
 
   ## terms not related to marginal kernels
-  message("\tterms not related to marginal kernels")
+  cat("\tterms not related to marginal kernels\n")
   Kx_s_dot_Kx_s <- Kx_s^2
   term_se_1_1 <- sum(Kx_s_dot_Kx_s * tcrossprod(gt_s))
   term_se_1_2 <- sum(Kx_s_dot_Kx_s * Kx_s)
@@ -229,7 +229,7 @@ CONCISE_coexp <- function(
   term_se_precalculate[, "term_se_3_4"] <- term_se_3_4
 
   ## terms related to only one marginal kernel
-  message("\tterms related to only one marginal kernel")
+  cat("\tterms related to only one marginal kernel\n")
   Kx_sTK_s_list <- list()
   Kx_sK_s_list <- list()
   for (i_k in 1:n_K) {
@@ -263,7 +263,7 @@ CONCISE_coexp <- function(
   rm(s_Kx_sT_Kx_sT_outer)
 
   ## terms related to both two marginal kernels
-  message("\tterms related to both two marginal kernels")
+  cat("\tterms related to both two marginal kernels\n")
   for (i_k1 in 1:n_K) {
     # kernel 1
     Kx_sTK1_s <- Kx_sTK_s_list[[i_k1]]

@@ -18,3 +18,13 @@ Installation
 library(devtools)
 install_github("jiazhao97/CONCISE")
 ```
+
+Tutorials and Reproducibility
+------------
+We provided codes for reproducing the experiments of the paper "Construction of a 3D whole organism spatial atlas by joint modelling of multiple slices with deep neural networks", and comprehensive tutorials for using CONCISE. Please check the [Tutorial website](https://jiazhao97.github.io/CONCISE-tutorial/) for more details.
+
+Reference
+------------
+Jia Zhao, Xinning Shan, Gefei Wang, Tinyi Chu, Chen Lin, Rui Chang, Hongyu Zhao. Spatial co-expression and cell-cell communication inference from spatially resolved transcriptomics with CONCISE. bioRxiv, 2026.
+
+
